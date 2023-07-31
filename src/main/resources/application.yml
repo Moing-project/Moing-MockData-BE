@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mockdata
+    username: root
+    password: ENC(A15/tzjhWRbV/b4CZE2Ae4Csfejwxnai7gyC1i8hCN37Qek0Bn2VC6uEr5iUv0aN)
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: 'true'
+        use_sql_comments: 'true'
+        show_sql: 'true'
+  profiles:
+    include: secret
+server:
+  port: 80
