@@ -8,17 +8,24 @@ import java.util.Map;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BaseResponseDto <T>{
+public class BaseResponseDto <T> extends MessageResponseDto{
 
-    private String msg;
     private T data;
+
+    protected BaseResponseDto(String msg, T data) {
+        super(msg);
+        this.data = data;
+    }
+
+    public BaseResponseDto() {
+    }
 
     public static BaseResponseDtoBuilder builder(){
         return new BaseResponseDtoBuilder();
     }
 
-    public static BaseResponseDtoBuilder messageBuilder(){
-        return new BaseResponseDtoBuilder();
+    public static BaseResponseDtoMessageBuilder messageBuilder(){
+        return new BaseResponseDtoMessageBuilder();
     }
 
     public static class BaseResponseDtoBuilder{

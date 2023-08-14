@@ -15,8 +15,8 @@ public class QAuthRepositoryImpl implements QAuthRepository {
 
 
     @Override
-    public boolean findByUsernameExist(String username) {
-        return queryFactory.select(authUser.username).from(authUser).where(authUser.username.eq(username)).fetchFirst() != null;
+    public boolean findByEmailExist(String email) {
+        return queryFactory.select(authUser.email).from(authUser).where(authUser.email.eq(email)).fetchFirst() != null;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class QAuthRepositoryImpl implements QAuthRepository {
     }
 
     @Override
-    public String findByPasswordInUsername(String username) {
-        return queryFactory.select(authUser.password).from(authUser).where(authUser.username.eq(username)).fetchFirst();
+    public String findByPasswordInUsername(String email) {
+        return queryFactory.select(authUser.password).from(authUser).where(authUser.email.eq(email)).fetchFirst();
     }
 }

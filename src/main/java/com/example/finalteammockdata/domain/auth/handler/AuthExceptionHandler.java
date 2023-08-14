@@ -2,6 +2,7 @@ package com.example.finalteammockdata.domain.auth.handler;
 
 import com.example.finalteammockdata.domain.auth.exception.AuthDuplicationException;
 import com.example.finalteammockdata.global.dto.BaseResponseDto;
+import com.example.finalteammockdata.global.dto.MessageResponseDto;
 import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public interface AuthExceptionHandler {
 
     @ExceptionHandler(AuthDuplicationException.class)
-    default ResponseEntity<BaseResponseDto> postExceptionHandler(AuthDuplicationException e) {
-        BaseResponseDto response = BaseResponseDto.builder()
-                .msg(e.getMessage())
-                .build();
+    default ResponseEntity<MessageResponseDto> postExceptionHandler(AuthDuplicationException e) {
+        MessageResponseDto response = MessageResponseDto.out(e.getMessage());
         return ResponseEntity.status(e.getStatus()).body(response);
     }
 

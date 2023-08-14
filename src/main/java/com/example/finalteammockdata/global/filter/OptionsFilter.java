@@ -3,24 +3,24 @@ package com.example.finalteammockdata.global.filter;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StreamUtils;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 
+@Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class OptionsFilter implements Filter {
+public class OptionsFilter implements Filter{
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
 
-    }
+
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -46,17 +46,19 @@ public class OptionsFilter implements Filter {
 //        System.out.println("req.getInputStream() = " + req.getInputStream());
 
 
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods","*");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "*");
-        response.addHeader("Access-Control-Expose-Headers","*");
-
         if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.setHeader("Access-Control-Allow-Methods","*");
+            response.setHeader("Access-Control-Max-Age", "3600");
+            response.setHeader("Access-Control-Allow-Headers", "*");
             response.setStatus(HttpServletResponse.SC_OK);
         }else {
-            chain.doFilter(req, res);
+            try {
+                chain.doFilter(req, res);
+            } catch (RuntimeException e) {
+                log.info(e.getCause().getClass().getName());
+            }
         }
     }
 

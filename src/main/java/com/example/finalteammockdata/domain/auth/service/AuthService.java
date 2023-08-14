@@ -2,59 +2,106 @@ package com.example.finalteammockdata.domain.auth.service;
 
 import com.example.finalteammockdata.domain.auth.dto.AuthLoginRequestDto;
 import com.example.finalteammockdata.domain.auth.dto.AuthSignupRequestDto;
+import com.example.finalteammockdata.domain.auth.entity.AuthTempUser;
 import com.example.finalteammockdata.domain.auth.entity.AuthUser;
 import com.example.finalteammockdata.domain.auth.exception.AuthDuplicationException;
 import com.example.finalteammockdata.domain.auth.repository.AuthRepository;
-import com.example.finalteammockdata.global.dto.BaseResponseDto;
+import com.example.finalteammockdata.domain.auth.repository.AuthTempRepository;
+import com.example.finalteammockdata.global.aspect.annotation.TransactionalLockAround;
+import com.example.finalteammockdata.global.dto.MessageResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @Service
 public class AuthService {
 
     private final AuthRepository authRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthServiceHelper authServiceHelper;
+    private final AuthTempRepository authTempRepository;
 
-    public AuthService(AuthRepository authRepository) {
+    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, AuthServiceHelper authServiceHelper, AuthTempRepository authTempRepository) {
         this.authRepository = authRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authServiceHelper = authServiceHelper;
+        this.authTempRepository = authTempRepository;
     }
 
-    public BaseResponseDto signIn(AuthSignupRequestDto requestDto) {
 
-        if(authRepository.findByUsernameExist(requestDto.getUsername())){
+    public MessageResponseDto signIn(AuthSignupRequestDto requestDto) {
+
+        if(authRepository.findByEmailExist(requestDto.getEmail())){
             throw new AuthDuplicationException(409, "아이디가 중복되었습니다.");
         }
         if(authRepository.findByNicknameExist(requestDto.getNickname())){
             throw new AuthDuplicationException(409, "닉네임이 중복되었습니다.");
         }
 
-        AuthUser newUser = new AuthUser(requestDto);
-        authRepository.save(newUser);
-        return BaseResponseDto.builder().msg("success").build();
+        requestDto.encodePassword(passwordEncoder);
+
+        AuthTempUser newUser = new AuthTempUser(requestDto);
+        authTempRepository.save(newUser);
+
+        MailSenderList.getInstance().addMailReceiver(newUser.getEmail());
+        new Thread(() -> DeleteTempAccount(newUser.getEmail(), authTempRepository)).start();
+        return MessageResponseDto.out("do Interval Code");
     }
 
-    public BaseResponseDto checkNickname(String nickname) {
+    public MessageResponseDto checkNickname(String nickname) {
         if(!StringUtils.hasText(nickname))
             throw new AuthDuplicationException(404, "닉네임을 적어주십시오.");
         if(authRepository.findByNicknameExist(nickname))
             throw new AuthDuplicationException(409, "닉네임이 중복되었습니다.");
-        return BaseResponseDto.builder().msg("success").build();
+        return MessageResponseDto.out("success");
     }
 
-    public BaseResponseDto checkUsername(String username) {
-        if(!StringUtils.hasText(username))
+    public MessageResponseDto checkUsername(String email) {
+        if(!StringUtils.hasText(email))
             throw new AuthDuplicationException(404, "아이디를 적어주십시오.");
-        if(authRepository.findByUsernameExist(username))
+        if(authRepository.findByEmailExist(email))
             throw new AuthDuplicationException(409, "아이디가 중복되었습니다.");
-        return BaseResponseDto.builder().msg("success").build();
+        return MessageResponseDto.out("success");
     }
 
-    public BaseResponseDto login(AuthLoginRequestDto requestDto) {
-        String password = authRepository.findByPasswordInUsername(requestDto.username());
+    @TransactionalLockAround
+    public MessageResponseDto login(AuthLoginRequestDto requestDto) {
+        String password = authRepository.findByPasswordInUsername(requestDto.email());
         if(password == null)
             throw new AuthDuplicationException(401, "아이디를 찾을 수 없습니다.");
         if(password.equals(requestDto.password()))
-            return BaseResponseDto.builder().msg("success").build();
+            return MessageResponseDto.out("success");
         throw new AuthDuplicationException(401, "비밀번호가 틀립니다.");
+    }
+
+    public MessageResponseDto checkAuthCode(Integer code) {
+        String email = authServiceHelper.getEmailByCode(code);
+        if(email == null)
+            throw new AuthDuplicationException(404, "Code Error");
+        AuthTempUser authTempUser = authTempRepository.findByEmail(email).orElseThrow(() -> new AuthDuplicationException(404, "Time out"));
+        AuthUser authUser = new AuthUser(authTempUser);
+        authRepository.save(authUser);
+        authTempRepository.delete(authTempUser);
+        return MessageResponseDto.out("create");
+    }
+    public MessageResponseDto returnAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        if(authServiceHelper.returnAccessToken(request,response)){
+            return MessageResponseDto.out("Success");
+        }
+        throw new AuthDuplicationException(404, "리프레시 토큰 오류");
+    }
+
+    private static void DeleteTempAccount(String email, AuthTempRepository authTempRepository){
+        try {
+            Thread.sleep(1000 * 60 * 4L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("Delete Account = {}", email);
+        authTempRepository.deleteByEmail(email);
     }
 }
