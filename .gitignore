@@ -37,3 +37,5 @@ out/
 .vscode/
 /src/main/resources/secret/
 /src/main/resources/application-secret.yml
+/src/test/java/com/example/finalteammockdata/
+/src/main/resources/ssl/
