@@ -77,7 +77,8 @@ public class WebSecurityConfig implements WebMvcConfigurer{
         return web -> {
             web.ignoring()
                     .requestMatchers("/api/auth/signin")
-                    .requestMatchers(HttpMethod.GET,"/api/auth/**");
+                    .requestMatchers(HttpMethod.GET,"/api/auth/**")
+                    .requestMatchers("/ws-stomp");
         };
     }
 

@@ -12,12 +12,12 @@ public class BaseResponseDto <T> extends MessageResponseDto{
 
     private T data;
 
-    protected BaseResponseDto(String msg, T data) {
-        super(msg);
+    private BaseResponseDto(Integer status, String msg, T data) {
+        super(status, msg);
         this.data = data;
     }
 
-    public BaseResponseDto() {
+    private BaseResponseDto() {
     }
 
     public static BaseResponseDtoBuilder builder(){

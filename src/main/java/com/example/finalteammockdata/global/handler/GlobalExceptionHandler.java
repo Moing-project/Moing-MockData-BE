@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GlobalStateException.class)
     public ResponseEntity<MessageResponseDto> GlobalStateExceptionHandler(GlobalStateException exception){
-        return ResponseEntity.status(exception.getStatus()).body(MessageResponseDto.out(exception.getMessage()));
+        return ResponseEntity.status(exception.getStatus()).body(MessageResponseDto.out(exception.getStatus(), exception.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

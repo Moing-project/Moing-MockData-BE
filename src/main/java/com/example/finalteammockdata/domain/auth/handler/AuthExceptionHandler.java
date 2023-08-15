@@ -15,7 +15,7 @@ public interface AuthExceptionHandler {
 
     @ExceptionHandler(AuthDuplicationException.class)
     default ResponseEntity<MessageResponseDto> postExceptionHandler(AuthDuplicationException e) {
-        MessageResponseDto response = MessageResponseDto.out(e.getMessage());
+        MessageResponseDto response = MessageResponseDto.out(e.getStatus(), e.getMessage());
         return ResponseEntity.status(e.getStatus()).body(response);
     }
 

@@ -49,7 +49,7 @@ public class AuthService {
 
         MailSenderList.getInstance().addMailReceiver(newUser.getEmail());
         new Thread(() -> DeleteTempAccount(newUser.getEmail(), authTempRepository)).start();
-        return MessageResponseDto.out("do Interval Code");
+        return MessageResponseDto.out(200,"do Interval Code");
     }
 
     public MessageResponseDto checkNickname(String nickname) {
@@ -57,7 +57,7 @@ public class AuthService {
             throw new AuthDuplicationException(404, "닉네임을 적어주십시오.");
         if(authRepository.findByNicknameExist(nickname))
             throw new AuthDuplicationException(409, "닉네임이 중복되었습니다.");
-        return MessageResponseDto.out("success");
+        return MessageResponseDto.out(200,"success");
     }
 
     public MessageResponseDto checkUsername(String email) {
@@ -65,7 +65,7 @@ public class AuthService {
             throw new AuthDuplicationException(404, "아이디를 적어주십시오.");
         if(authRepository.findByEmailExist(email))
             throw new AuthDuplicationException(409, "아이디가 중복되었습니다.");
-        return MessageResponseDto.out("success");
+        return MessageResponseDto.out(200,"success");
     }
 
     @TransactionalLockAround
@@ -74,7 +74,7 @@ public class AuthService {
         if(password == null)
             throw new AuthDuplicationException(401, "아이디를 찾을 수 없습니다.");
         if(password.equals(requestDto.password()))
-            return MessageResponseDto.out("success");
+            return MessageResponseDto.out(200,"success");
         throw new AuthDuplicationException(401, "비밀번호가 틀립니다.");
     }
 
@@ -86,11 +86,11 @@ public class AuthService {
         AuthUser authUser = new AuthUser(authTempUser);
         authRepository.save(authUser);
         authTempRepository.delete(authTempUser);
-        return MessageResponseDto.out("create");
+        return MessageResponseDto.out(201,"create");
     }
     public MessageResponseDto returnAccessToken(HttpServletRequest request, HttpServletResponse response) {
         if(authServiceHelper.returnAccessToken(request,response)){
-            return MessageResponseDto.out("Success");
+            return MessageResponseDto.out(200,"Success");
         }
         throw new AuthDuplicationException(404, "리프레시 토큰 오류");
     }
