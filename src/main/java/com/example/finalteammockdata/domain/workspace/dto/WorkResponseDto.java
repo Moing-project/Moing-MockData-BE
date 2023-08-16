@@ -1,8 +1,11 @@
 package com.example.finalteammockdata.domain.workspace.dto;
 
+import com.example.finalteammockdata.domain.auth.dto.AuthWorkSoloResponseDto;
+import com.example.finalteammockdata.domain.workspace.entity.Workspace;
 import com.example.finalteammockdata.domain.workspace.enums.WorkAllowEnum;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class WorkResponseDto {
     private String name;
@@ -18,4 +21,27 @@ public class WorkResponseDto {
     private String introduce;
 
     private String imageSrc;
+
+    private List<AuthWorkSoloResponseDto> members;
+
+    public WorkResponseDto(String name, String subject, Integer needMember, LocalDateTime lastTime, WorkAllowEnum allowType, String introduce, String imageSrc, List<AuthWorkSoloResponseDto> members) {
+        this.name = name;
+        this.subject = subject;
+        this.needMember = needMember;
+        this.lastTime = lastTime;
+        this.allowType = allowType;
+        this.introduce = introduce;
+        this.imageSrc = imageSrc;
+        this.members = members;
+    }
+    public WorkResponseDto(Workspace workspace, List<AuthWorkSoloResponseDto> members) {
+        this.name = workspace.getName();
+        this.subject = workspace.getSubject();
+        this.needMember = workspace.getNeedMember();
+        this.lastTime = workspace.getLastTime();
+        this.allowType = workspace.getAllowType();
+        this.introduce = workspace.getIntroduce();
+        this.imageSrc = workspace.getImageSrc();
+        this.members = members;
+    }
 }

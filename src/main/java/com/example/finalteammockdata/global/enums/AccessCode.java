@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 public enum AccessCode {
     EMAIL_CORRECT_ERROR("A03", HttpStatus.NOT_ACCEPTABLE),
     ACCESS_TOKEN_ERROR("A08",HttpStatus.BAD_REQUEST),
+    WORKSPACE_CREATE_ALLOW("A10",HttpStatus.CREATED),
 
     NULL_ERROR(null, null);
 

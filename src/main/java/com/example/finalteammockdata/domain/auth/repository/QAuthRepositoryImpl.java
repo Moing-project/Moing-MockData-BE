@@ -1,5 +1,7 @@
 package com.example.finalteammockdata.domain.auth.repository;
 
+import com.example.finalteammockdata.domain.auth.dto.AuthWorkSoloResponseDto;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -27,5 +29,11 @@ public class QAuthRepositoryImpl implements QAuthRepository {
     @Override
     public String findByPasswordInUsername(String email) {
         return queryFactory.select(authUser.password).from(authUser).where(authUser.email.eq(email)).fetchFirst();
+    }
+
+    @Override
+    public AuthWorkSoloResponseDto findByProfileImageAndNicknameById(Long id) {
+        Tuple tuple = queryFactory.select(authUser.profileImage, authUser.nickname).from(authUser).where(authUser.id.eq(id)).fetchFirst();
+        return new AuthWorkSoloResponseDto(tuple.get(authUser.profileImage), tuple.get(authUser.nickname));
     }
 }
