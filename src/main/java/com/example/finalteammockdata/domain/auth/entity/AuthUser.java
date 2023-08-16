@@ -5,8 +5,10 @@ import com.example.finalteammockdata.global.enums.AuthGlobalUserEnum;
 import com.example.finalteammockdata.global.maps.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 @Entity
+@Component
 @Getter
 public class AuthUser extends Timestamped {
     @Id
