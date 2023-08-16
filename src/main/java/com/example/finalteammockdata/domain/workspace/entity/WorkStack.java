@@ -1,6 +1,6 @@
 package com.example.finalteammockdata.domain.workspace.entity;
 
-import com.example.finalteammockdata.global.enums.WorkspaceStack;
+import com.example.finalteammockdata.domain.workspace.enums.WorkStackEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -15,12 +15,12 @@ public class WorkStack {
     Long workId;
 
     @Enumerated(value = EnumType.STRING)
-    WorkspaceStack stacks;
+    WorkStackEnum stacks;
 
     public WorkStack() {
     }
 
-    public WorkStack(Long workId, WorkspaceStack stacks) {
+    public WorkStack(Long workId, WorkStackEnum stacks) {
         this.workId = workId;
         this.stacks = stacks;
     }

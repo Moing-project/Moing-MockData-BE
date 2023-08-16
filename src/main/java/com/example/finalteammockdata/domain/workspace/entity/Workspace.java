@@ -1,7 +1,7 @@
 package com.example.finalteammockdata.domain.workspace.entity;
 
-import com.example.finalteammockdata.domain.workspace.dto.WorkCreateDto;
-import com.example.finalteammockdata.domain.workspace.enums.WorkAllowMember;
+import com.example.finalteammockdata.domain.workspace.dto.WorkCreateRequestDto;
+import com.example.finalteammockdata.domain.workspace.enums.WorkAllowEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,27 +15,27 @@ import java.time.LocalDateTime;
 public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
+    private String name;
 
-    String subject; //분야
+    private String subject; //분야
 
-    Integer needMember; //모집 인원
+    private Integer needMember; //모집 인원
 
-    LocalDateTime lastTime; // 모집 마감 시간;
+    private LocalDateTime lastTime; // 모집 마감 시간;
 
-    WorkAllowMember allowType; // 멤버 참가 방식
+    private WorkAllowEnum allowType; // 멤버 참가 방식
 
-    String introduce;
+    private String introduce;
 
-    String imageSrc;
+    private String imageSrc;
 
     public Workspace() {
 
     }
 
-    public Workspace(String name, String subject, Integer needMember, LocalDateTime lastTime, WorkAllowMember allowType, String introduce, String imageSrc) {
+    public Workspace(String name, String subject, Integer needMember, LocalDateTime lastTime, WorkAllowEnum allowType, String introduce, String imageSrc) {
         this.name = name;
         this.subject = subject;
         this.needMember = needMember;
@@ -45,12 +45,12 @@ public class Workspace {
         this.imageSrc = imageSrc;
     }
 
-    public Workspace(WorkCreateDto createDto) {
+    public Workspace(WorkCreateRequestDto createDto) {
         this.name = createDto.title();
         this.subject = createDto.subject();
         this.needMember = createDto.needMember();
         this.lastTime = LocalDateTime.parse(createDto.date());
-        this.allowType = WorkAllowMember.get(createDto.allowType());
+        this.allowType = WorkAllowEnum.get(createDto.allowType());
         this.introduce = createDto.introduce();
         this.imageSrc = createDto.imageSrc();
     }

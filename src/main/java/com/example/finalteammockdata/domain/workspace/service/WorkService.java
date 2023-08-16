@@ -1,14 +1,15 @@
 package com.example.finalteammockdata.domain.workspace.service;
 
-import com.example.finalteammockdata.domain.workspace.dto.WorkCreateDto;
+import com.example.finalteammockdata.domain.workspace.dto.WorkCreateRequestDto;
 import com.example.finalteammockdata.domain.workspace.dto.WorkListResponseDto;
+import com.example.finalteammockdata.domain.workspace.dto.WorkResponseDto;
 import com.example.finalteammockdata.domain.workspace.entity.WorkTeam;
 import com.example.finalteammockdata.domain.workspace.entity.Workspace;
 import com.example.finalteammockdata.domain.workspace.repository.WorkRepository;
 import com.example.finalteammockdata.domain.workspace.repository.WorkStackRepository;
 import com.example.finalteammockdata.domain.workspace.repository.WorkTeamRepository;
 import com.example.finalteammockdata.global.dto.MessageResponseDto;
-import com.example.finalteammockdata.global.enums.WorkspaceStack;
+import com.example.finalteammockdata.domain.workspace.enums.WorkStackEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,7 @@ public class WorkService {
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
-    public MessageResponseDto createWorkspace(WorkCreateDto createDto, Long userId) {
+    public MessageResponseDto createWorkspace(WorkCreateRequestDto createDto, Long userId) {
         Workspace newWorkspace = new Workspace(createDto);
 
         newWorkspace = workRepository.save(newWorkspace);
@@ -45,26 +46,6 @@ public class WorkService {
         return MessageResponseDto.out(201, "create");
     }
 
-    private boolean workspaceAddUser(Long workspaceId, Long userId) {
-        if (workTeamRepository.findByWorkIdAndUserId(workspaceId, userId).isPresent()) {
-            return false;
-        }
-        workTeamRepository.save(new WorkTeam(workspaceId, userId));
-        return true;
-    }
-
-    private boolean workspaceAddStacks(Long workspaceId, List<String> stacks) {
-        List<WorkspaceStack> workspaceStackList = new ArrayList<>();
-        for (String stack : stacks) {
-            if (workStackRepository.findByWorkIdAndStacks(workspaceId, stack).isEmpty()) {
-                WorkspaceStack workspaceStack = WorkspaceStack.get(stack);
-                if (workspaceStack != null)
-                    workspaceStackList.add(workspaceStack);
-            }
-        }
-        return workspaceStackList.size() != 0;
-    }
-
     public List<WorkListResponseDto> getWorkspaces() {
         List<Workspace> workspaces = workRepository.findAll();
         List<WorkListResponseDto> responseDtoList = new ArrayList<>();
@@ -74,10 +55,39 @@ public class WorkService {
         return responseDtoList;
     }
 
+    public WorkResponseDto getWorkspace(Long workId) {
+        return null;
+    }
+
+    private boolean workspaceAddUser(Long workspaceId, Long userId) {
+        if (workTeamRepository.findByWorkIdAndUserId(workspaceId, userId).isPresent()) {
+            return false;
+        }
+        workTeamRepository.save(new WorkTeam(workspaceId, userId));
+        return true;
+    }
+
+    private boolean workspaceAddStacks(Long workspaceId, List<String> stacks) {
+        List<WorkStackEnum> workStackEnumList = new ArrayList<>();
+        for (String stack : stacks) {
+            if (workStackRepository.findByWorkIdAndStacks(workspaceId, stack).isEmpty()) {
+                WorkStackEnum workStackEnum = WorkStackEnum.get(stack);
+                if (workStackEnum != null)
+                    workStackEnumList.add(workStackEnum);
+            }
+        }
+        return workStackEnumList.size() != 0;
+    }
+
+
+
     private WorkListResponseDto getListResponseDto(Workspace workspace){
-        return new WorkListResponseDto(workspace.getImageSrc(),
+        return new WorkListResponseDto(workspace.getId(),
+                workspace.getImageSrc(),
                 workspace.getName(),
-                workStackRepository.findAllByWorkIdToStack(workspace.getId()).stream().map(WorkspaceStack::getStack).toList(),
+                workStackRepository.findAllByWorkIdToStack(workspace.getId()).stream().map(WorkStackEnum::getStack).toList(),
                 workspace.getIntroduce());
     }
+
+
 }

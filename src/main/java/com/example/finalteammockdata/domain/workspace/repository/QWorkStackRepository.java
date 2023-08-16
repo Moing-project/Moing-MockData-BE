@@ -1,10 +1,10 @@
 package com.example.finalteammockdata.domain.workspace.repository;
 
-import com.example.finalteammockdata.global.enums.WorkspaceStack;
+import com.example.finalteammockdata.domain.workspace.enums.WorkStackEnum;
 
 import java.util.List;
 
 public interface QWorkStackRepository {
 
-    List<WorkspaceStack> findAllByWorkIdToStack(Long workId);
+    List<WorkStackEnum> findAllByWorkIdToStack(Long workId);
 }

@@ -1,6 +1,6 @@
 package com.example.finalteammockdata.domain.workspace.repository;
 
-import com.example.finalteammockdata.global.enums.WorkspaceStack;
+import com.example.finalteammockdata.domain.workspace.enums.WorkStackEnum;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +18,7 @@ public class QWorkStackRepositoryImpl implements QWorkStackRepository{
     }
 
     @Override
-    public List<WorkspaceStack> findAllByWorkIdToStack(Long workId){
+    public List<WorkStackEnum> findAllByWorkIdToStack(Long workId){
         return queryFactory.select(workStack.stacks).from(workStack).where(workStack.workId.eq(workId)).fetchAll().fetch();
     }
 }
