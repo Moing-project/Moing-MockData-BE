@@ -14,22 +14,22 @@ public enum DeniedCode {
     NULL_ERROR(null, null);
 
     DeniedCode(String errorName, HttpStatus httpStatus) {
-        this.errorName = "DENIED_" + errorName;
+        this.errorCode = "DENIED_" + errorName;
         this.status = httpStatus;
     }
     DeniedCode(String errorName, int httpStatus) {
-        this.errorName = "DENIED_" + errorName;
+        this.errorCode = "DENIED_" + errorName;
         this.status = HttpStatus.valueOf(httpStatus);
     }
 
-    public String getName() {
-        return this.errorName;
+    public String code() {
+        return this.errorCode;
     }
 
-    public HttpStatus getStatus() {
+    public HttpStatus status() {
         return this.status;
     }
 
-    private final String errorName;
+    private final String errorCode;
     private final HttpStatus status;
 }

@@ -42,7 +42,7 @@ public class JwtExceptionHandlerEntryPoint extends OncePerRequestFilter {
         response.setStatus(401);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        BaseResponseDtoMessageBuilder errorLoginDto = BaseResponseDto.messageBuilder().msg(DeniedCode.ACCESS_TOKEN_ERROR.getName());
+        BaseResponseDtoMessageBuilder errorLoginDto = BaseResponseDto.messageBuilder().msg(DeniedCode.ACCESS_TOKEN_ERROR.code());
         errorLoginDto.dataMsg("errorSubject", message);
         ObjectMapper objectMapper = new ObjectMapper();
         try {

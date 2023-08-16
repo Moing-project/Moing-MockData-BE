@@ -10,7 +10,7 @@ public enum WorkStackEnum {
     PYTHON("Python"),
     JAVA("Java"),
     C_CPLUSPLUS("C/C++"),
-    C_SHAP("C#"),
+    C_SHARP("C#"),
     SWIFT("Swift"),
     DART("Dart"),
     NODE_JS("Node.js"),
@@ -50,5 +50,4 @@ public enum WorkStackEnum {
         }
         return null;
     }
-
 }

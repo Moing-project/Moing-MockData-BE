@@ -25,7 +25,6 @@ public class AuthUser extends Timestamped {
 
     private String profileImage;
 
-
     public AuthUser() {
     }
 

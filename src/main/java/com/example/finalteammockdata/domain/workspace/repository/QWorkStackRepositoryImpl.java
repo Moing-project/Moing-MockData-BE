@@ -19,6 +19,6 @@ public class QWorkStackRepositoryImpl implements QWorkStackRepository{
 
     @Override
     public List<WorkStackEnum> findAllByWorkIdToStack(Long workId){
-        return queryFactory.select(workStack.stacks).from(workStack).where(workStack.workId.eq(workId)).fetchAll().fetch();
+        return queryFactory.select(workStack.stack).from(workStack).where(workStack.workId.eq(workId)).fetchAll().fetch();
     }
 }

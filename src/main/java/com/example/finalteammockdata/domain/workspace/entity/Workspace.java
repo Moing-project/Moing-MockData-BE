@@ -49,7 +49,8 @@ public class Workspace {
         this.name = createDto.title();
         this.subject = createDto.subject();
         this.needMember = createDto.needMember();
-        this.lastTime = LocalDateTime.parse(createDto.date());
+        String[] date = createDto.date().split(".");
+//        this.lastTime = LocalDateTime.of(Integer.parseInt(date[0]),Integer.parseInt(date[1]),Integer.parseInt(date[2]));
         this.allowType = WorkAllowEnum.get(createDto.allowType());
         this.introduce = createDto.introduce();
         this.imageSrc = createDto.imageSrc();

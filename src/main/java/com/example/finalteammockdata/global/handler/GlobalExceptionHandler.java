@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponseDto<Map<String,String>>> MethodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception){
-        BaseResponseDto.BaseResponseDtoMessageBuilder messageBuilder = BaseResponseDto.messageBuilder().msg(DeniedCode.DO_VALID_ERROR.name());
+        BaseResponseDto.BaseResponseDtoMessageBuilder messageBuilder = BaseResponseDto.messageBuilder().msg(DeniedCode.DO_VALID_ERROR.code());
         exception.getBindingResult().getFieldErrors().forEach(e -> messageBuilder.dataMsg(e.getField(), e.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.OK.value()).body(messageBuilder.build());
     }

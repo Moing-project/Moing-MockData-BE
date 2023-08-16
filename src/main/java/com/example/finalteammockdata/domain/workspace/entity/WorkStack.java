@@ -15,13 +15,13 @@ public class WorkStack {
     Long workId;
 
     @Enumerated(value = EnumType.STRING)
-    WorkStackEnum stacks;
+    WorkStackEnum stack;
 
     public WorkStack() {
     }
 
     public WorkStack(Long workId, WorkStackEnum stacks) {
         this.workId = workId;
-        this.stacks = stacks;
+        this.stack = stacks;
     }
 }

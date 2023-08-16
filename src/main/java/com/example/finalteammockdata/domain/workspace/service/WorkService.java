@@ -5,6 +5,7 @@ import com.example.finalteammockdata.domain.auth.repository.AuthRepository;
 import com.example.finalteammockdata.domain.workspace.dto.WorkCreateRequestDto;
 import com.example.finalteammockdata.domain.workspace.dto.WorkListResponseDto;
 import com.example.finalteammockdata.domain.workspace.dto.WorkResponseDto;
+import com.example.finalteammockdata.domain.workspace.entity.WorkStack;
 import com.example.finalteammockdata.domain.workspace.entity.WorkTeam;
 import com.example.finalteammockdata.domain.workspace.entity.Workspace;
 import com.example.finalteammockdata.domain.workspace.repository.WorkRepository;
@@ -46,13 +47,13 @@ public class WorkService {
 
         newWorkspace = workRepository.save(newWorkspace);
 
-        if (workspaceAddUser(newWorkspace.getId(), userId)) {
-            throw ErrorCodeException.make(WORKSPACE_CREATE_ERROR.getStatus(), WORKSPACE_CREATE_ERROR.getName());
+        if (!workspaceAddUser(newWorkspace.getId(), userId)) {
+            throw ErrorCodeException.make(WORKSPACE_CREATE_ERROR.status(), WORKSPACE_CREATE_ERROR.code());
         }
-        if (workspaceAddStacks(newWorkspace.getId(), createDto.stacks())) {
-            throw ErrorCodeException.make(WORKSPACE_CREATE_ERROR.getStatus(), WORKSPACE_CREATE_ERROR.getName());
+        if (!workspaceAddStacks(newWorkspace.getId(), createDto.stacks())) {
+            throw ErrorCodeException.make(WORKSPACE_CREATE_ERROR.status(), WORKSPACE_CREATE_ERROR.code());
         }
-        return MessageResponseDto.out(WORKSPACE_CREATE_ALLOW.getStatus(), WORKSPACE_CREATE_ALLOW.getName());
+        return MessageResponseDto.out(WORKSPACE_CREATE_ALLOW.status(), WORKSPACE_CREATE_ALLOW.code());
     }
 
     public List<WorkListResponseDto> getWorkspaces() {
@@ -65,7 +66,7 @@ public class WorkService {
     }
 
     public WorkResponseDto getWorkspace(Long workId) {
-        Workspace workspace = workRepository.findById(workId).orElseThrow(() -> ErrorCodeException.make(WORKSPACE_NOT_FOUND_ERROR.getStatus(), WORKSPACE_NOT_FOUND_ERROR.getName()));
+        Workspace workspace = workRepository.findById(workId).orElseThrow(() -> ErrorCodeException.make(WORKSPACE_NOT_FOUND_ERROR.status(), WORKSPACE_NOT_FOUND_ERROR.code()));
         return new WorkResponseDto(workspace, getWorkUserList(workspace.getId()));
     }
 
@@ -80,13 +81,14 @@ public class WorkService {
     private boolean workspaceAddStacks(Long workspaceId, List<String> stacks) {
         List<WorkStackEnum> workStackEnumList = new ArrayList<>();
         for (String stack : stacks) {
-            if (workStackRepository.findByWorkIdAndStacks(workspaceId, stack).isEmpty()) {
-                WorkStackEnum workStackEnum = WorkStackEnum.get(stack);
-                if (workStackEnum != null)
-                    workStackEnumList.add(workStackEnum);
+            WorkStackEnum workStack = WorkStackEnum.get(stack);
+            if (workStack == null)
+                return false;
+            if (workStackRepository.findByWorkIdAndStack(workspaceId, workStack).isEmpty()) {
+                workStackRepository.save(new WorkStack(workspaceId,workStack));
             }
         }
-        return workStackEnumList.size() != 0;
+        return true;
     }
 
     private List<AuthWorkSoloResponseDto> getWorkUserList(Long workspaceId){
