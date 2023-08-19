@@ -12,7 +12,7 @@ public class WorkResponseDto {
 
     private String subject; //분야
 
-    private Integer needMember; //모집 인원
+    private Integer totalMember; //모집 인원
 
     private LocalDateTime lastTime; // 모집 마감 시간;
 
@@ -24,10 +24,10 @@ public class WorkResponseDto {
 
     private List<AuthWorkSoloResponseDto> members;
 
-    public WorkResponseDto(String name, String subject, Integer needMember, LocalDateTime lastTime, WorkAllowEnum allowType, String introduce, String imageSrc, List<AuthWorkSoloResponseDto> members) {
+    public WorkResponseDto(String name, String subject, Integer totalMember, LocalDateTime lastTime, WorkAllowEnum allowType, String introduce, String imageSrc, List<AuthWorkSoloResponseDto> members) {
         this.name = name;
         this.subject = subject;
-        this.needMember = needMember;
+        this.totalMember = totalMember;
         this.lastTime = lastTime;
         this.allowType = allowType;
         this.introduce = introduce;
@@ -37,11 +37,12 @@ public class WorkResponseDto {
     public WorkResponseDto(Workspace workspace, List<AuthWorkSoloResponseDto> members) {
         this.name = workspace.getName();
         this.subject = workspace.getSubject();
-        this.needMember = workspace.getNeedMember();
+        this.totalMember = workspace.getTotalMember();
         this.lastTime = workspace.getLastTime();
         this.allowType = workspace.getAllowType();
         this.introduce = workspace.getIntroduce();
         this.imageSrc = workspace.getImageSrc();
         this.members = members;
     }
+
 }

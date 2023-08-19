@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/mockdata
     username: root
-    password: ENC(6eusmmKVQSNCbB5jvN6fpZSN2FYx/JgXWVpSDVWQi4hilAzE+eFQ34t4dieBm06l)
+    password: tadamb16
   data:
     redis:
       port: 6379

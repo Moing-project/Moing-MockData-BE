@@ -3,5 +3,5 @@ package com.example.finalteammockdata.domain.workspace.dto;
 import java.util.List;
 
 
-public record WorkCreateRequestDto(String title, String subject, Integer needMember, String date, String allowType, List<String> stacks, String introduce, String imageSrc) {
+public record WorkCreateRequestDto(Long id, String title, String subject, Integer totalMember, String date, String allowType, List<String> stacks, String introduce, String imageSrc) {
 }

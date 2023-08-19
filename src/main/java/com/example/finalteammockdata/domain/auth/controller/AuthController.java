@@ -39,10 +39,10 @@ public class AuthController implements AuthExceptionHandler {
         return ResponseEntity.ok(authService.signIn(requestDto));
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<MessageResponseDto> login(@RequestBody AuthLoginRequestDto requestDto){
-//        return ResponseEntity.ok(authService.login(requestDto));
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<MessageResponseDto> login(@RequestBody AuthLoginRequestDto requestDto){
+        return ResponseEntity.ok(authService.login(requestDto));
+    }
 
     @GetMapping("/nickname")
     public ResponseEntity<MessageResponseDto> checkNickname(@ModelAttribute @Valid AuthNicknameRequestDto nickname){
