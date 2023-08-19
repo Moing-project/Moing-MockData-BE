@@ -9,6 +9,9 @@ import com.example.finalteammockdata.domain.auth.repository.AuthRepository;
 import com.example.finalteammockdata.domain.auth.repository.AuthTempRepository;
 import com.example.finalteammockdata.global.aspect.annotation.TransactionalLockAround;
 import com.example.finalteammockdata.global.dto.MessageResponseDto;
+import com.example.finalteammockdata.global.enums.DeniedCode;
+import com.example.finalteammockdata.global.exception.DeniedCodeException;
+import com.example.finalteammockdata.global.exception.ErrorCodeException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -62,9 +65,9 @@ public class AuthService {
 
     public MessageResponseDto checkUsername(String email) {
         if(!StringUtils.hasText(email))
-            throw new AuthDuplicationException(404, "아이디를 적어주십시오.");
+            throw DeniedCodeException.out(DeniedCode.EMAIL_CORRECT_ERROR);
         if(authRepository.findByEmailExist(email))
-            throw new AuthDuplicationException(409, "아이디가 중복되었습니다.");
+            throw DeniedCodeException.out(DeniedCode.EMAIL_CORRECT_ERROR);
         return MessageResponseDto.out(200,"success");
     }
 

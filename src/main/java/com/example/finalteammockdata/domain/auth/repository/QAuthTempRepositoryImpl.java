@@ -5,6 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.finalteammockdata.domain.auth.entity.QAuthTempUser.authTempUser;
+
 @Repository
 public class QAuthTempRepositoryImpl implements QAuthTempRepository{
 
@@ -16,6 +18,7 @@ public class QAuthTempRepositoryImpl implements QAuthTempRepository{
     @Override
     @Transactional
     public Long deleteByEmail(String email) {
-        return queryFactory.delete(QAuthTempUser.authTempUser).where(QAuthTempUser.authTempUser.email.eq(email)).execute();
+
+        return queryFactory.delete(authTempUser).where(authTempUser.email.eq(email)).execute();
     }
 }

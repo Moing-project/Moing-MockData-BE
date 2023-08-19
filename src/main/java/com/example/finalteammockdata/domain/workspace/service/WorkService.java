@@ -67,7 +67,7 @@ public class WorkService {
 
     public WorkResponseDto getWorkspace(Long workId) {
         Workspace workspace = workRepository.findById(workId).orElseThrow(() -> ErrorCodeException.make(WORKSPACE_NOT_FOUND_ERROR.status(), WORKSPACE_NOT_FOUND_ERROR.code()));
-        return new WorkResponseDto(workspace, getWorkUserList(workspace.getId()));
+        return new WorkResponseDto(workspace, workStackRepository.findAllByWorkIdToStack(workId), getWorkUserList(workId));
     }
 
     private boolean workspaceAddUser(Long workspaceId, Long userId) {

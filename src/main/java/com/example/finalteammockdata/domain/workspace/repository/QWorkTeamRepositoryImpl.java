@@ -15,6 +15,6 @@ public class QWorkTeamRepositoryImpl implements QWorkTeamRepository{
     }
     @Override
     public List<Long> findAllSelectUserIdByWorkId(Long workId) {
-        return queryFactory.select(workTeam.userId).from(workTeam).where(workTeam.workId.eq(workId)).fetchAll().fetch();
+        return queryFactory.select(workTeam.userId).from(workTeam).where(workTeam.workId.eq(workId)).fetch();
     }
 }

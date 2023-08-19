@@ -80,7 +80,10 @@ public class WebSecurityConfig implements WebMvcConfigurer{
             web.ignoring()
                     .requestMatchers("/api/auth/signin")
                     .requestMatchers(HttpMethod.GET,"/api/auth/**")
-                    .requestMatchers("/ws-stomp");
+                    .requestMatchers("/ws-stomp")
+                    .requestMatchers("/oauth/**")
+                    .requestMatchers("/swagger-ui/**")
+                    .requestMatchers("/v3/**");
         };
     }
 

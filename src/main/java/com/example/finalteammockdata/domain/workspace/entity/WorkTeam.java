@@ -1,9 +1,7 @@
 package com.example.finalteammockdata.domain.workspace.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.finalteammockdata.domain.workspace.enums.WorkPermissionEnum;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
@@ -16,6 +14,9 @@ public class WorkTeam {
     Long workId;
 
     Long userId;
+
+    @Enumerated(value = EnumType.STRING)
+    WorkPermissionEnum userPermission;
 
     public WorkTeam() {
     }

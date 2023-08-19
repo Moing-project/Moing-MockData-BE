@@ -3,6 +3,7 @@ package com.example.finalteammockdata.global.handler;
 import com.example.finalteammockdata.global.dto.BaseResponseDto;
 import com.example.finalteammockdata.global.dto.MessageResponseDto;
 import com.example.finalteammockdata.global.enums.DeniedCode;
+import com.example.finalteammockdata.global.exception.DeniedCodeException;
 import com.example.finalteammockdata.global.exception.ErrorCodeException;
 import com.example.finalteammockdata.global.exception.GlobalStateException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ErrorCodeException.class)
     public ResponseEntity<MessageResponseDto> GlobalStateExceptionHandler(ErrorCodeException exception){
         return ResponseEntity.ok(MessageResponseDto.out(exception.getStatus(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(DeniedCodeException.class)
+    public ResponseEntity<MessageResponseDto> GlobalStateExceptionHandler(DeniedCodeException exception){
+        return ResponseEntity.ok(MessageResponseDto.out(exception.codeStatus(), exception.codeName()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
