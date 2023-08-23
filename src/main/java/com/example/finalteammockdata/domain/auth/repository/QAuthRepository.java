@@ -1,5 +1,6 @@
 package com.example.finalteammockdata.domain.auth.repository;
 
+import com.example.finalteammockdata.domain.auth.dao.AuthNickAndImageDao;
 import com.example.finalteammockdata.domain.auth.dto.AuthWorkSoloResponseDto;
 
 public interface QAuthRepository {
@@ -9,5 +10,5 @@ public interface QAuthRepository {
 
     String findByPasswordInUsername(String email);
 
-    AuthWorkSoloResponseDto findByProfileImageAndNicknameById(Long id);
+    AuthNickAndImageDao findByProfileImageAndNicknameById(Long id);
 }
