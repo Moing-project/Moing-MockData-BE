@@ -28,12 +28,12 @@ public class WorkController {
     public ResponseEntity<MessageResponseDto> createWorkspace(@RequestBody WorkCreateRequestDto createDto,
                                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
         Long userId = userDetails.getUser().getId();
-        return ResponseEntity.status(HttpStatus.CREATED.value()).body(workService.createWorkspace(createDto, userId));
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body(workService.createWorkspace(createDto, userId, userDetails.getUser().getUserRole()));
     }
 
-    @GetMapping()
-    public ResponseEntity<List<WorkListResponseDto>> getWorkspaces(){
-        return ResponseEntity.ok(workService.getWorkspaces());
+    @GetMapping("/main")
+    public ResponseEntity<List<WorkListResponseDto>> getWorkspaces(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.ok(workService.getWorkspaces(userDetails.getUser().getId()));
     }
 
     @GetMapping("/{workId}")

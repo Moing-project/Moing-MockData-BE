@@ -12,7 +12,7 @@ public enum DeniedCode {
     ACCESS_TOKEN_ERROR("A08",HttpStatus.BAD_REQUEST),
     WORKSPACE_CREATE_ERROR("A10",HttpStatus.MULTI_STATUS),
     WORKSPACE_NOT_FOUND_ERROR("A11",HttpStatus.NOT_FOUND),
-
+    IMAGE_NOT_CREATED("A90",HttpStatus.NOT_ACCEPTABLE),
     NULL_ERROR(null, null);
 
     DeniedCode(String errorName, HttpStatus httpStatus) {

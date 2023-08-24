@@ -16,12 +16,12 @@ public class Workspace extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String title;
 
     @Enumerated(value = EnumType.STRING)
     private WorkSubjectEnum subject; // 분야
 
-    private Integer totalMember; //모집 인원
+    private Integer totalMember; //최종 인원
 
     private LocalDateTime lastTime; // 모집 마감 시간;
 
@@ -36,8 +36,8 @@ public class Workspace extends Timestamped {
 
     }
 
-    public Workspace(String name, WorkSubjectEnum subject, Integer totalMember, LocalDateTime lastTime, WorkAllowEnum allowType, String introduce, String imageSrc) {
-        this.name = name;
+    public Workspace(String title, WorkSubjectEnum subject, Integer totalMember, LocalDateTime lastTime, WorkAllowEnum allowType, String introduce, String imageSrc) {
+        this.title = title;
         this.subject = subject;
         this.totalMember = totalMember;
         this.lastTime = lastTime;
@@ -46,10 +46,10 @@ public class Workspace extends Timestamped {
         this.imageSrc = imageSrc;
     }
 
-    public Workspace(WorkCreateRequestDto createDto) {
-        this.name = createDto.title();
+    public Workspace(WorkCreateRequestDto createDto, Integer totalMember) {
+        this.title = createDto.title();
         this.subject = WorkSubjectEnum.get(createDto.subject());
-        this.totalMember = createDto.totalMember();
+        this.totalMember = totalMember;
         String[] date = createDto.date().split("\\.");
         this.lastTime = LocalDateTime.of(Integer.parseInt(date[0]),Integer.parseInt(date[1]),Integer.parseInt(date[2])-1, 23,59);
         this.allowType = WorkAllowEnum.get(createDto.allowType());

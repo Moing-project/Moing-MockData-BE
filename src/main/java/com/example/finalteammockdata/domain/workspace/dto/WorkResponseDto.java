@@ -41,7 +41,7 @@ public class WorkResponseDto {
         this.members = members;
     }
     public WorkResponseDto(Workspace workspace, List<WorkStackEnum> stacks, List<AuthWorkSoloResponseDto> members) {
-        this.name = workspace.getName();
+        this.name = workspace.getTitle();
         this.subject = workspace.getSubject().value();
         this.totalMember = workspace.getTotalMember();
         this.lastTime = workspace.getLastTime();

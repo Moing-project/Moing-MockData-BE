@@ -35,6 +35,6 @@ public class QAuthRepositoryImpl implements QAuthRepository {
     @Override
     public AuthNickAndImageDao findByProfileImageAndNicknameById(Long id) {
         Tuple tuple = queryFactory.select(authUser.profileImage, authUser.nickname).from(authUser).where(authUser.id.eq(id)).fetchFirst();
-        return new AuthNickAndImageDao(tuple.get(authUser.nickname), tuple.get(authUser.profileImage));
+        return new AuthNickAndImageDao(id, tuple.get(authUser.nickname), tuple.get(authUser.profileImage));
     }
 }

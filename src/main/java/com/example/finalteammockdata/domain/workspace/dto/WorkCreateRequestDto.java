@@ -5,7 +5,6 @@ import java.util.List;
 
 public record WorkCreateRequestDto(String title,
                                    String subject,
-                                   Integer totalMember,
                                    String date,
                                    String allowType,
                                    List<String> stacks,

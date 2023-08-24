@@ -63,7 +63,7 @@ public class SwaggerAPIConfig {
                     apiResponses.addApiResponse(String.valueOf(HttpStatus.BAD_REQUEST.value()),
                             new ApiResponse().description(HttpStatus.BAD_REQUEST.getReasonPhrase()));
                     operation.responses(apiResponses);
-                    operation.addTagsItem("auth-controller");
+                    operation.addTagsItem("auth");
                     PathItem pathItem = new PathItem().post(operation);
                     openAPI.getPaths().addPathItem("/auth/login", pathItem);
                 }

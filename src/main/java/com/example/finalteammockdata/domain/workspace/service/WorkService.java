@@ -2,6 +2,7 @@ package com.example.finalteammockdata.domain.workspace.service;
 
 import com.example.finalteammockdata.domain.auth.dto.AuthWorkSoloResponseDto;
 import com.example.finalteammockdata.domain.auth.repository.AuthRepository;
+import com.example.finalteammockdata.domain.workspace.dao.WorkMainDao;
 import com.example.finalteammockdata.domain.workspace.dto.WorkCreateRequestDto;
 import com.example.finalteammockdata.domain.workspace.dto.WorkListResponseDto;
 import com.example.finalteammockdata.domain.workspace.dto.WorkResponseDto;
@@ -13,12 +14,15 @@ import com.example.finalteammockdata.domain.workspace.repository.WorkStackReposi
 import com.example.finalteammockdata.domain.workspace.repository.WorkTeamRepository;
 import com.example.finalteammockdata.global.dto.MessageResponseDto;
 import com.example.finalteammockdata.domain.workspace.enums.WorkStackEnum;
+import com.example.finalteammockdata.global.enums.AuthGlobalUserEnum;
 import com.example.finalteammockdata.global.exception.ErrorCodeException;
+import com.example.finalteammockdata.global.sercurity.UserDetailsImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.finalteammockdata.global.enums.AccessCode.*;
 import static com.example.finalteammockdata.global.enums.DeniedCode.*;
@@ -42,8 +46,8 @@ public class WorkService {
     }
 
     @Transactional(rollbackFor = {RuntimeException.class, Exception.class})
-    public MessageResponseDto createWorkspace(WorkCreateRequestDto createDto, Long userId) {
-        Workspace newWorkspace = new Workspace(createDto);
+    public MessageResponseDto createWorkspace(WorkCreateRequestDto createDto, Long userId, AuthGlobalUserEnum userRating) {
+        Workspace newWorkspace = new Workspace(createDto, workServiceHelper.createMaxMemberToUserRating(userRating));
 
         newWorkspace = workRepository.save(newWorkspace);
 
@@ -56,13 +60,10 @@ public class WorkService {
         return MessageResponseDto.out(WORKSPACE_CREATE_ALLOW.status(), WORKSPACE_CREATE_ALLOW.code());
     }
 
-    public List<WorkListResponseDto> getWorkspaces() {
-        List<Workspace> workspaces = workRepository.findAll();
-        List<WorkListResponseDto> responseDtoList = new ArrayList<>();
-        for (Workspace workspace : workspaces) {
-            responseDtoList.add(getListResponseDto(workspace));
-        }
-        return responseDtoList;
+    public List<WorkListResponseDto> getWorkspaces(Long userId) {
+        List<WorkTeam> works = workTeamRepository.findAllByUserIdOrderByModifiedAtDesc(userId);
+        List<WorkMainDao> workspaces = workRepository.findAllByListWorkIdToMainDao(works);
+        return workspaces.stream().map(e-> new WorkListResponseDto(e.id(), e.imageSrc(), e.title(), e.favorite())).toList();
     }
 
     public WorkResponseDto getWorkspace(Long workId) {
@@ -99,11 +100,10 @@ public class WorkService {
         return result;
     }
 
-    private WorkListResponseDto getListResponseDto(Workspace workspace){
+    private WorkListResponseDto getListResponseDto(Workspace workspace, boolean favorite){
         return new WorkListResponseDto(workspace.getId(),
                 workspace.getImageSrc(),
-                workspace.getName(),
-                workStackRepository.findAllByWorkIdToStack(workspace.getId()).stream().map(WorkStackEnum::getStack).toList(),
-                workspace.getIntroduce());
+                workspace.getTitle(),
+                favorite);
     }
 }

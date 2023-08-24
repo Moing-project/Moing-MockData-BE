@@ -2,6 +2,7 @@ package com.example.finalteammockdata.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,30 +20,36 @@ public class BaseResponseDto <T> extends MessageResponseDto{
 
     private BaseResponseDto() {
     }
+    private BaseResponseDto(T data) {
+        this.data = data;
+    }
 
-    public static BaseResponseDtoBuilder builder(){
-        return new BaseResponseDtoBuilder();
+    public static <T> BaseResponseDtoBuilder<T> builder(T data){
+        return new BaseResponseDtoBuilder(data);
     }
 
     public static BaseResponseDtoMessageBuilder messageBuilder(){
         return new BaseResponseDtoMessageBuilder();
     }
 
-    public static class BaseResponseDtoBuilder{
-        private final BaseResponseDto instance;
-        public BaseResponseDtoBuilder() {
-            this.instance = new BaseResponseDto();
+    public static class BaseResponseDtoBuilder <T> {
+        private final BaseResponseDto<T> instance;
+        public BaseResponseDtoBuilder(T data) {
+            this.instance = new BaseResponseDto<T>(data);
         }
-        public BaseResponseDtoBuilder msg(String msg){
+        public BaseResponseDtoBuilder<T> msg(String msg){
             this.instance.msg = msg;
             return this;
         }
-
-        public <T> BaseResponseDtoBuilder data(T data){
-            this.instance.data = data;
+        public BaseResponseDtoBuilder<T> status(Integer status){
+            this.instance.status = status;
             return this;
         }
-        public BaseResponseDto build(){
+        public BaseResponseDtoBuilder<T> status(HttpStatus status){
+            this.instance.status = status.value();
+            return this;
+        }
+        public BaseResponseDto<T> build(){
             return this.instance;
         }
     }
@@ -57,7 +64,14 @@ public class BaseResponseDto <T> extends MessageResponseDto{
             this.instance.msg = msg;
             return this;
         }
-
+        public BaseResponseDtoMessageBuilder status(Integer status){
+            this.instance.status = status;
+            return this;
+        }
+        public BaseResponseDtoMessageBuilder status(HttpStatus status){
+            this.instance.status = status.value();
+            return this;
+        }
         public BaseResponseDtoMessageBuilder dataMsg(String key, String value){
             this.instance.data.put(key, value);
             return this;

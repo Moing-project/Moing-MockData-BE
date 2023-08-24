@@ -71,16 +71,6 @@ public class AuthService {
         return MessageResponseDto.out(200,"success");
     }
 
-    @TransactionalLockAround
-    public MessageResponseDto login(AuthLoginRequestDto requestDto) {
-        String password = authRepository.findByPasswordInUsername(requestDto.email());
-        if(password == null)
-            throw new AuthDuplicationException(401, "아이디를 찾을 수 없습니다.");
-        if(password.equals(requestDto.password()))
-            return MessageResponseDto.out(200,"success");
-        throw new AuthDuplicationException(401, "비밀번호가 틀립니다.");
-    }
-
     public MessageResponseDto checkAuthCode(Integer code) {
         String email = authServiceHelper.getEmailByCode(code);
         if(email == null)
