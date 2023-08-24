@@ -23,8 +23,7 @@ public class AuthUser extends Timestamped {
 
     private String nickname;
 
-    private String profile_image;
-
+    private String profileImage;
 
     public AuthUser() {
     }

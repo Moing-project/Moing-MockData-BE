@@ -1,5 +1,7 @@
 package com.example.finalteammockdata.global.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.*;
@@ -12,6 +14,7 @@ import org.springframework.web.socket.server.HandshakeFailureException;
 import org.springframework.web.socket.server.HandshakeHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import java.util.Enumeration;
 import java.util.Map;
 
 @Slf4j
@@ -47,7 +50,9 @@ public class WebSocketStompConfiguration implements WebSocketMessageBrokerConfig
         public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
             System.out.println("beforeHandshake");
             log.info("beforeHandshake");
-            request.getHeaders().forEach((k,v)-> log.debug("{} : {}", k, v));
+            if(request instanceof HttpServletRequest){
+                HttpSession session = ((HttpServletRequest) request).getSession();
+            }
             return true;
         }
 
